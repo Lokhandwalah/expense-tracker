@@ -1,12 +1,16 @@
-import 'package:expense_tracker/core/responsive_view.dart';
+import 'package:expense_tracker/app/models/transaction.dart';
+import 'package:expense_tracker/app/views/home_page_mobile.dart';
+import 'package:expense_tracker/app/widgets/chart.dart';
+import 'package:expense_tracker/app/widgets/new_transaction.dart';
+import 'package:expense_tracker/app/widgets/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../plaform.dart';
-import '../../models/transaction.dart';
-import '../../widgets/chart.dart';
-import '../../widgets/new_transaction.dart';
-import '../../widgets/transaction_list.dart';
+import '../../core/responsive_view.dart';
+import '../models/category.dart';
+import '../widgets/categories_list.dart';
+import 'home_page_web.dart';
 
 class MyHomePage extends View {
   const MyHomePage({Key? key}) : super(key: key);
@@ -15,22 +19,10 @@ class MyHomePage extends View {
 }
 
 class _MyHomePageState extends ResponsiveViewSate<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),
-  ];
+  final List<Transaction> _userTransactions = transactionList;
 
   bool _showChart = false;
+  Category? _selectedCategory;
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -43,12 +35,13 @@ class _MyHomePageState extends ResponsiveViewSate<MyHomePage> {
   }
 
   void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate) {
+      String txTitle, double txAmount, DateTime chosenDate, Category category) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
       date: chosenDate,
       id: DateTime.now().toString(),
+      category: category,
     );
 
     setState(() {
@@ -109,14 +102,7 @@ class _MyHomePageState extends ResponsiveViewSate<MyHomePage> {
                   ),
                 ],
               ),
-            if (!isLandscape)
-              SizedBox(
-                height: (mediaQuery.size.height -
-                        appBarHeight -
-                        mediaQuery.padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions),
-              ),
+            if (!isLandscape) Chart(_recentTransactions),
             if (!isLandscape) txListWidget,
             if (isLandscape)
               _showChart
@@ -156,51 +142,8 @@ class _MyHomePageState extends ResponsiveViewSate<MyHomePage> {
   }
 
   @override
-  Widget get iosView {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final appBarHeight = AppBar().preferredSize.height;
-    final txListWidget = SizedBox(
-      height: (mediaQuery.size.height - appBarHeight - mediaQuery.padding.top) *
-          0.7,
-      child: TransactionList(_userTransactions, _deleteTransaction),
-    );
-    final pageBody = SafeArea(
-      child: Material(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(height: 10),
-              Text('Hello,', style: TextStyle(fontSize: 35)),
-              Text('Husain',
-                  style: TextStyle(
-                    fontSize: 38,
-                    fontWeight: FontWeight.bold,
-                  )),
-              Chart(_recentTransactions),
-              txListWidget
-            ],
-          ),
-        ),
-      ),
-    );
-
-    return Scaffold(
-      body: pageBody,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Container(height: 20.0),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
-      ),
-    );
-  }
+  Widget get iosView => HomePageMobile();
 
   @override
-  Widget get webView => iosView;
+  Widget get webView => HomePageWeb();
 }

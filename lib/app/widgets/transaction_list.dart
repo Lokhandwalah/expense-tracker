@@ -1,4 +1,7 @@
+import 'package:expense_tracker/core/app_theme.dart';
+import 'package:expense_tracker/core/utils/screen_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
@@ -6,14 +9,18 @@ import '../models/transaction.dart';
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function deleteTx;
-
-  const TransactionList(this.transactions, this.deleteTx);
+  final SlidableController slidableController = SlidableController();
+  TransactionList(this.transactions, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
-    return transactions.isEmpty
-        ? LayoutBuilder(builder: (ctx, constraints) {
-            return Column(
+    final todayTransactions = transactions
+        .where((transaction) => isToday(transaction.date, DateTime.now()));
+    final recentTransactions = transactions
+        .where((transaction) => !isToday(transaction.date, DateTime.now()));
+    return SingleChildScrollView(
+      child: transactions.isEmpty
+          ? Column(
               children: <Widget>[
                 Text(
                   'No transactions added yet!',
@@ -23,58 +30,123 @@ class TransactionList extends StatelessWidget {
                   height: 20,
                 ),
                 Container(
-                    height: constraints.maxHeight * 0.6,
+                    height: getScreenHeight(context) * 0.25,
                     child: Image.asset(
                       'assets/images/waiting.png',
                       fit: BoxFit.cover,
                     )),
               ],
-            );
-          })
-        : ListView.builder(
-            itemBuilder: (ctx, index) {
-              return Card(
-                elevation: 5,
-                margin: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 5,
-                ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text('\$${transactions[index].amount}'),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (todayTransactions.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Today',
+                      style: TextStyle(
+                        color: AppTheme.secondary,
+                        fontSize: 18,
                       ),
                     ),
                   ),
-                  title: Text(
-                    transactions[index].title,
-                    style: Theme.of(context).textTheme.headline6,
+                ...todayTransactions.map(
+                  (transaction) => buildTransactionCard(
+                    context,
+                    transaction,
                   ),
-                  subtitle: Text(
-                    DateFormat.yMMMd().format(transactions[index].date),
-                  ),
-                  trailing: MediaQuery.of(context).size.width > 460
-                      ? ElevatedButton.icon(
-                          icon: Icon(Icons.delete),
-                          label: Text(
-                            'Delete',
-                            style:
-                                TextStyle(color: Theme.of(context).errorColor),
-                          ),
-                          onPressed: () => deleteTx(transactions[index].id),
-                        )
-                      : IconButton(
-                          icon: Icon(Icons.delete),
-                          color: Theme.of(context).errorColor,
-                          onPressed: () => deleteTx(transactions[index].id),
-                        ),
                 ),
-              );
-            },
-            itemCount: transactions.length,
-          );
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Recent',
+                    style: TextStyle(
+                      color: AppTheme.secondary,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                ...transactions
+                    .where((transaction) =>
+                        !isToday(transaction.date, DateTime.now()))
+                    .map(
+                      (transaction) => buildTransactionCard(
+                        context,
+                        transaction,
+                      ),
+                    )
+              ],
+            ),
+    );
   }
+
+  Widget buildTransactionCard(BuildContext context, Transaction transaction) {
+    final DateTime current = DateTime.now();
+    bool isToday = current.day == transaction.date.day &&
+        current.month == transaction.date.month &&
+        current.year == transaction.date.year;
+    bool isSameYear = DateTime.now().year == transaction.date.year;
+    return Card(
+      elevation: 5,
+      child: Slidable(
+        key: UniqueKey(),
+        controller: slidableController,
+        actionPane: SlidableScrollActionPane(),
+        secondaryActions: [
+          IconSlideAction(
+            iconWidget: Icon(
+              Icons.delete_outline,
+              color: Colors.redAccent,
+            ),
+            caption: 'Delete',
+            onTap: () => deleteTx(transaction.id),
+          ),
+        ],
+        child: ListTile(
+          leading: Card(
+            elevation: 6,
+            shape: CircleBorder(),
+            color: AppTheme.offWhite,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                transaction.category.icon,
+                color: AppTheme.primary,
+              ),
+            ),
+          ),
+          title: Text(
+            transaction.title,
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          subtitle: Text(transaction.category.name),
+          trailing: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '₹' + NumberFormat("###,###.0#").format(transaction.amount),
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 5),
+              if (!isToday)
+                Text(
+                  DateFormat(isSameYear ? 'MMM d' : 'MMM d, yyyy')
+                      .format(transaction.date),
+                  style: TextStyle(
+                    color: AppTheme.secondary,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool isToday(DateTime a, DateTime b) =>
+      a.day == b.day && a.month == b.month && a.year == b.year;
 }

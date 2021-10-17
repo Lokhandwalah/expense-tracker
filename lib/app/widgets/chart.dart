@@ -9,8 +9,10 @@ import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
   final List<Transaction> recentTransactions;
+  final bool isWeb;
 
-  const Chart(this.recentTransactions, {Key? key}) : super(key: key);
+  const Chart(this.recentTransactions, {Key? key, this.isWeb = false})
+      : super(key: key);
 
   List<Expense> get groupedTransactionValues {
     return List.generate(7, (index) {
@@ -89,6 +91,7 @@ class Chart extends StatelessWidget {
                       data.date,
                       data.amount,
                       totalSpending == 0.0 ? 0.0 : data.amount / totalSpending,
+                      isWeb: isWeb,
                     );
                   }).toList(),
                 ),

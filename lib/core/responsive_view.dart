@@ -5,14 +5,15 @@ abstract class View extends StatefulWidget {
   const View({Key? key}) : super(key: key);
 }
 
-abstract class ResponsiveViewSate<Page extends View> extends State<Page > {
+abstract class ResponsiveViewSate<Page extends View> extends State<Page> {
   @override
   Widget build(BuildContext context) {
-    return CurrentPlatForm.isWeb
-        ? webView
-        : CurrentPlatForm.isIOS
+    final Size size = MediaQuery.of(context).size;
+    return size.width < size.height
+        ? CurrentPlatForm.isIOS
             ? iosView
-            : androidView;
+            : androidView
+        : webView;
   }
 
   Widget get webView;

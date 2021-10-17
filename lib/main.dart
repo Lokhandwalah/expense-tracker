@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'app/views/home/home_page.dart';
+import 'app/views/home_page.dart';
 
 void main() {
   // SystemChrome.setPreferredOrientations([
