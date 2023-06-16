@@ -1,8 +1,8 @@
-import 'package:expense_tracker/app/models/category.dart';
-import 'package:expense_tracker/app/models/transaction.dart';
-import 'package:expense_tracker/core/app_theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/app_theme.dart';
+import '../models/category.dart';
+import '../models/transaction.dart';
 
 class CategoriesChart extends StatefulWidget {
   final List<Transaction> transactions;

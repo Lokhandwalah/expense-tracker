@@ -1,9 +1,10 @@
-import 'package:expense_tracker/app/widgets/categories_chart.dart';
-import 'package:expense_tracker/core/utils/screen_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../models/category.dart';
+import '../../core/utils/screen_config.dart';
+import '../models/category.dart' as expense;
 import '../models/transaction.dart';
+import '../widgets/categories_chart.dart';
 import '../widgets/categories_list.dart';
 import '../widgets/chart.dart';
 import '../widgets/new_transaction.dart';
@@ -19,7 +20,7 @@ class HomePageWeb extends StatefulWidget {
 class _HomePageWebState extends State<HomePageWeb> {
   List<Transaction> _userTransactions = transactionList;
 
-  Category? _selectedCategory;
+  expense.Category? _selectedCategory;
 
   List<Transaction> get _recentTransactions {
     return _userTransactions.where((tx) {
@@ -31,8 +32,8 @@ class _HomePageWebState extends State<HomePageWeb> {
     }).toList();
   }
 
-  void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate, Category category) {
+  void _addNewTransaction(String txTitle, double txAmount, DateTime chosenDate,
+      expense.Category category) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
@@ -99,29 +100,33 @@ class _HomePageWebState extends State<HomePageWeb> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Chart(
-                      _recentTransactions,
-                      isWeb: true,
+                    Container(
+                      height: kIsWeb
+                          ? getScreenHeight(context) * .45
+                          : getScreenHeight(context) * .55,
+                      child: Chart(
+                        _recentTransactions,
+                        isWeb: true,
+                      ),
                     ),
                     Container(
-                        height: getScreenHeight(context) * 0.45,
-                        child: CategoriesChart(transactions: _userTransactions))
+                      height: kIsWeb
+                          ? getScreenHeight(context) * .55
+                          : getScreenHeight(context) * .45,
+                      child: CategoriesChart(transactions: _userTransactions),
+                    )
                   ],
                 ),
                 Positioned(
                   top: 40,
                   right: 40,
-                  child: TextButton(
-                    child: Row(
-                      children: const [
-                        Icon(Icons.add),
-                        Text(
-                          'Add',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
+                  child: TextButton.icon(
+                    icon: Icon(Icons.add),
+                    label: Text(
+                      'Add',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
                     onPressed: () => _startAddNewTransaction(context),
                   ),
@@ -131,7 +136,8 @@ class _HomePageWebState extends State<HomePageWeb> {
             SizedBox(width: 10),
             Expanded(
               child: Container(
-                height: getScreenHeight(context) * 0.95,
+                height:
+                    getScreenHeight(context) + getScreenHeight(context) * .2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -154,10 +160,6 @@ class _HomePageWebState extends State<HomePageWeb> {
 
     return Scaffold(
       body: pageBody,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Container(height: 20.0),
-      ),
     );
   }
 }

@@ -1,6 +1,7 @@
-import 'package:expense_tracker/plaform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../plaform.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;

@@ -1,6 +1,7 @@
-import 'package:expense_tracker/app/models/category.dart';
-import 'package:expense_tracker/core/app_theme.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/app_theme.dart';
+import '../models/category.dart';
 
 class CategoryFilter extends StatelessWidget {
   final Category? selectedCategory;

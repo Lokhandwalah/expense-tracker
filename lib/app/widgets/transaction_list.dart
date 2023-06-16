@@ -1,9 +1,9 @@
-import 'package:expense_tracker/core/app_theme.dart';
-import 'package:expense_tracker/core/utils/screen_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/app_theme.dart';
+import '../../core/utils/screen_config.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
@@ -16,15 +16,13 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     final todayTransactions = transactions
         .where((transaction) => isToday(transaction.date, DateTime.now()));
-    final recentTransactions = transactions
-        .where((transaction) => !isToday(transaction.date, DateTime.now()));
     return SingleChildScrollView(
       child: transactions.isEmpty
           ? Column(
               children: <Widget>[
                 Text(
                   'No transactions added yet!',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 SizedBox(
                   height: 20,
@@ -118,7 +116,7 @@ class TransactionList extends StatelessWidget {
           ),
           title: Text(
             transaction.title,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Text(transaction.category.name),
           trailing: Column(

@@ -20,11 +20,12 @@ List<Transaction> get transactionList {
   final DateTime current = DateTime.now();
   return [
     Transaction(
-        id: 't1',
-        title: 'New Shoes',
-        amount: 800,
-        date: current,
-        category: Category.clothing),
+      id: 't1',
+      title: 'New Shoes',
+      amount: 800,
+      date: current,
+      category: Category.clothing,
+    ),
     Transaction(
       id: 't2',
       title: 'Weekly Groceries',

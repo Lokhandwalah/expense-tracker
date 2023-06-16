@@ -1,10 +1,9 @@
-import 'package:expense_tracker/app/models/expense.dart';
-import 'package:expense_tracker/core/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 import './chart_bar.dart';
+import '../../core/app_theme.dart';
+import '../models/expense.dart';
 import '../models/transaction.dart';
 
 class Chart extends StatelessWidget {
@@ -29,8 +28,9 @@ class Chart extends StatelessWidget {
         }
       }
       return Expense(
-          date: DateFormat.E().format(weekDay).substring(0, 1),
-          amount: totalSum);
+        date: DateFormat.E().format(weekDay).substring(0, 1),
+        amount: totalSum,
+      );
     }).reversed.toList();
   }
 

@@ -1,6 +1,6 @@
-import 'package:expense_tracker/core/utils/screen_config.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/utils/screen_config.dart';
 import '../models/category.dart';
 import '../models/transaction.dart';
 import '../widgets/categories_list.dart';
@@ -8,15 +8,16 @@ import '../widgets/chart.dart';
 import '../widgets/new_transaction.dart';
 import '../widgets/transaction_list.dart';
 
-class HomePageMobile extends StatefulWidget {
-  const HomePageMobile({Key? key}) : super(key: key);
+class HomePageMobileIOS extends StatefulWidget {
+  const HomePageMobileIOS({Key? key}) : super(key: key);
 
   @override
-  State<HomePageMobile> createState() => _HomePageMobileState();
+  State<HomePageMobileIOS> createState() => _HomePageMobileIOSState();
 }
 
-class _HomePageMobileState extends State<HomePageMobile> {
-  List<Transaction> _userTransactions = transactionList;
+class _HomePageMobileIOSState extends State<HomePageMobileIOS> {
+  final List<Transaction> _userTransactions = transactionList
+    ..sort((a, b) => b.date.compareTo(a.date));
 
   Category? _selectedCategory;
 
@@ -49,11 +50,7 @@ class _HomePageMobileState extends State<HomePageMobile> {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
-        return GestureDetector(
-          onTap: () {},
-          child: NewTransaction(_addNewTransaction),
-          behavior: HitTestBehavior.opaque,
-        );
+        return NewTransaction(_addNewTransaction);
       },
     );
   }
@@ -66,8 +63,6 @@ class _HomePageMobileState extends State<HomePageMobile> {
 
   @override
   Widget build(BuildContext context) {
-    _userTransactions.sort((a, b) => a.date.compareTo(b.date));
-    _userTransactions = _userTransactions.reversed.toList();
     final txListWidget = TransactionList(
         _userTransactions
             .where(

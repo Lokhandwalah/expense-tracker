@@ -1,6 +1,6 @@
-import 'package:expense_tracker/core/app_theme.dart';
-import 'package:expense_tracker/core/utils/screen_config.dart';
 import 'package:flutter/material.dart';
+import '../../core/app_theme.dart';
+import '../../core/utils/screen_config.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -25,7 +25,7 @@ class ChartBar extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: AppTheme.offWhite,
-          margin: EdgeInsets.symmetric(horizontal: isWeb? 10: 5),
+          margin: EdgeInsets.symmetric(horizontal: isWeb ? 10 : 5),
           child: Stack(
             children: [
               Container(
