@@ -9,8 +9,7 @@ import '../models/transaction.dart';
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function deleteTx;
-  final SlidableController slidableController = SlidableController();
-  TransactionList(this.transactions, this.deleteTx);
+  const TransactionList(this.transactions, this.deleteTx);
 
   @override
   Widget build(BuildContext context) {
@@ -89,18 +88,16 @@ class TransactionList extends StatelessWidget {
       elevation: 5,
       child: Slidable(
         key: UniqueKey(),
-        controller: slidableController,
-        actionPane: SlidableScrollActionPane(),
-        secondaryActions: [
-          IconSlideAction(
-            iconWidget: Icon(
-              Icons.delete_outline,
-              color: Colors.redAccent,
+        endActionPane: ActionPane(
+          motion: ScrollMotion(),
+          children: [
+            SlidableAction(
+              icon: Icons.delete_outline,
+              label: 'Delete',
+              onPressed: (_) => deleteTx(transaction.id),
             ),
-            caption: 'Delete',
-            onTap: () => deleteTx(transaction.id),
-          ),
-        ],
+          ],
+        ),
         child: ListTile(
           leading: Card(
             elevation: 6,
@@ -124,7 +121,7 @@ class TransactionList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '₹' + NumberFormat("###,###.0#").format(transaction.amount),
+                '₹${NumberFormat("###,###.0#").format(transaction.amount)}',
                 style: TextStyle(
                   fontSize: 18,
                 ),

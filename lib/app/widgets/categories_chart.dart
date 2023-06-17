@@ -10,7 +10,7 @@ class CategoriesChart extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CategoriesChartState createState() => _CategoriesChartState();
+  State<CategoriesChart> createState() => _CategoriesChartState();
 }
 
 class _CategoriesChartState extends State<CategoriesChart> {
@@ -86,14 +86,28 @@ class _CategoriesChartState extends State<CategoriesChart> {
         ),
         title: Text(category.name),
         subtitle: Text(
-          '₹' + totalCategoryAmount.toString(),
+          '₹$totalCategoryAmount',
           style: TextStyle(color: AppTheme.secondary, fontSize: 20),
         ),
         trailing: Text(
-          (totalCategoryAmount / totalAmount * 100).toStringAsFixed(2) + '%',
+          '${(totalCategoryAmount / totalAmount * 100).toStringAsFixed(2)}%',
           style: TextStyle(color: AppTheme.primary, fontSize: 20),
         ),
       ),
     );
+  }
+}
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

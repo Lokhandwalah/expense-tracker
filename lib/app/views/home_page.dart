@@ -8,10 +8,10 @@ import 'home_page_web.dart';
 class MyHomePage extends View {
   const MyHomePage({Key? key}) : super(key: key);
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends ResponsiveViewSate<MyHomePage> {
+class MyHomePageState extends ResponsiveViewSate<MyHomePage> {
   @override
   Widget get androidView => HomePageMobileAndroid();
 

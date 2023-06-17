@@ -12,7 +12,7 @@ class NewTransaction extends StatefulWidget {
   const NewTransaction(this.addTx, {Key? key}) : super(key: key);
 
   @override
-  _NewTransactionState createState() => _NewTransactionState();
+  State<NewTransaction> createState() => _NewTransactionState();
 }
 
 class _NewTransactionState extends State<NewTransaction> {
@@ -167,8 +167,8 @@ class _NewTransactionState extends State<NewTransaction> {
                   ],
                 ),
                 ElevatedButton(
-                  child: Text('Add Transaction'),
                   onPressed: _submitData,
+                  child: Text('Add Transaction'),
                 ),
               ],
             ),

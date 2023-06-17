@@ -13,15 +13,16 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CurrentPlatForm.isIOS
         ? CupertinoButton(
+            onPressed: handler,
             child: Text(
               text,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            onPressed: handler,
           )
         : TextButton(
+            onPressed: handler,
             child: Text(
               text,
               style: TextStyle(
@@ -29,7 +30,6 @@ class CustomButton extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
             ),
-            onPressed: handler,
           );
   }
 }
